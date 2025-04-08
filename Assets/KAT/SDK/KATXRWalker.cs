@@ -1,4 +1,3 @@
-// Redone, all of headset coordinates are recalculated
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -41,6 +40,11 @@ public class KATXRWalker : MonoBehaviour
 
     protected Vector3 lastPosition = Vector3.zero;
     protected float yawCorrection;
+    [Header("Debug Mode (No Treadmill)")]
+    public bool debugMode = true;
+    public float yawTurnSpeed = 45f; // degrees per second
+    private float simulatedYaw = 0f;
+    private Quaternion simulatedBodyRotation = Quaternion.identity;
 
     void FixedUpdate()
     {
@@ -57,6 +61,13 @@ public class KATXRWalker : MonoBehaviour
             if (Input.GetKey(KeyCode.S)) ws.moveSpeed.z = -1;
             if (Input.GetKey(KeyCode.D)) ws.moveSpeed.x = 1;
             if (Input.GetKey(KeyCode.A)) ws.moveSpeed.x = -1;
+
+            if (Input.GetKey(KeyCode.Q)) simulatedYaw -= yawTurnSpeed * Time.fixedDeltaTime;
+            if (Input.GetKey(KeyCode.E)) simulatedYaw += yawTurnSpeed * Time.fixedDeltaTime;
+
+            simulatedBodyRotation = Quaternion.Euler(0, simulatedYaw, 0);
+            ws.bodyRotationRaw = simulatedBodyRotation;
+
         }
 
         if (!treadmillConnected && ws.moveSpeed == Vector3.zero)
@@ -71,7 +82,7 @@ public class KATXRWalker : MonoBehaviour
         {
             var hmdYaw = eye.transform.eulerAngles.y;
             var bodyYaw = ws.bodyRotationRaw.eulerAngles.y;
-            yawCorrection = bodyYaw - hmdYaw;
+            float yawDelta = bodyYaw - hmdYaw;
 
             var pos = transform.position;
             var eyePos = eye.transform.position;
@@ -85,7 +96,10 @@ public class KATXRWalker : MonoBehaviour
         }
 
         // Apply rotation from treadmill (chest direction only)
-        transform.rotation = Quaternion.Euler(0, ws.bodyRotationRaw.eulerAngles.y, 0);
+        Vector3 euler = ws.bodyRotationRaw.eulerAngles;
+        euler.y *= 1f; // Multiply Yaw
+        transform.rotation = Quaternion.Euler(euler);
+
 
         // Speed mode logic
         switch (speedMode)
