@@ -1,26 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FollowWalker : MonoBehaviour
 {
     public Transform katWalker;
-    
-    [Tooltip("Vertical offset above the capsule (Y axis)")]
-    public float heightOffset = 1.36f;
 
-    [Tooltip("Forward offset in front of the capsule")]
-    public float forwardOffset = 0.2f;
+    [Tooltip("Vertical offset above the capsule (Y axis)")]
+    public float heightOffset = 0.6f;
 
     void LateUpdate()
     {
         if (katWalker != null)
         {
-            // Calculate forward + upward offset based on capsule's rotation
-            Vector3 offset = katWalker.up * heightOffset + katWalker.forward * forwardOffset;
+            // Copy capsule rotation
+            transform.rotation = katWalker.rotation;
+
+            // Follow capsule position + vertical offset
+            Vector3 offset = Vector3.up * heightOffset;
             transform.position = katWalker.position + offset;
         }
     }
 }
-
-

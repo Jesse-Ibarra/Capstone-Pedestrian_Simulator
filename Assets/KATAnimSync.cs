@@ -8,6 +8,9 @@ public class KATAnimSync : MonoBehaviour
     private Vector3 lastPosition;
     private float smoothSpeed = 0f;
 
+    private float smoothedForward = 0f;
+    private float smoothedHorizontal = 0f;
+
     void Start()
     {
         if (rootTransform == null && transform.parent != null)
@@ -23,20 +26,33 @@ public class KATAnimSync : MonoBehaviour
         if (animator == null || rootTransform == null)
             return;
 
-        float rawSpeed = (rootTransform.position - lastPosition).magnitude / Time.deltaTime;
+        Vector3 worldDelta = (rootTransform.position - lastPosition);
 
-        // Clamp tiny speeds to 0 to prevent flickering
-        if (rawSpeed < 0.05f)
-            rawSpeed = 0f;
+        // 🛠️ NEW: Deadzone world movement
+        if (worldDelta.magnitude < 0.02f) 
+            worldDelta = Vector3.zero;
 
-        // Smooth the speed using Lerp
-        smoothSpeed = Mathf.Lerp(smoothSpeed, rawSpeed, Time.deltaTime * 10f); // 10f is smoothing factor
+        Vector3 localDelta = rootTransform.InverseTransformDirection(worldDelta);
 
-        // Normalize and clamp
-        float scaledSpeed = Mathf.Clamp(smoothSpeed / 2.5f, 0f, 2f);
+        float rawForward = localDelta.z / Time.deltaTime;
+        float rawHorizontal = localDelta.x / Time.deltaTime;
 
-        animator.SetFloat("MoveSpeed", scaledSpeed);
+        smoothedForward = Mathf.Lerp(smoothedForward, rawForward, Time.deltaTime * 5f);
+        smoothedHorizontal = Mathf.Lerp(smoothedHorizontal, rawHorizontal, Time.deltaTime * 5f);
+
+        if (Mathf.Abs(smoothedForward) < 0.05f)
+            smoothedForward = 0f;
+        if (Mathf.Abs(smoothedHorizontal) < 0.05f)
+            smoothedHorizontal = 0f;
+
+        float scaledForward = Mathf.Clamp(smoothedForward / 2.5f, -2f, 2f);
+        float scaledHorizontal = Mathf.Clamp(smoothedHorizontal / 2.5f, -2f, 2f);
+
+        animator.SetFloat("MoveSpeed", Mathf.Abs(scaledForward)); 
+        animator.SetFloat("Forward", scaledForward);
+        animator.SetFloat("Horizontal", scaledHorizontal);
 
         lastPosition = rootTransform.position;
     }
+
 }

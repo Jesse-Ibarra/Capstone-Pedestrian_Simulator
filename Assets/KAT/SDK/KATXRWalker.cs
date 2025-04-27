@@ -10,6 +10,7 @@ public class KATXRWalker : MonoBehaviour
 {
     public GameObject xr;
     public GameObject eye;
+    public GameObject cameraOffset;
 
     public enum ExecuteMethod
     {
@@ -46,6 +47,20 @@ public class KATXRWalker : MonoBehaviour
     private float simulatedYaw = 0f;
     private Quaternion simulatedBodyRotation = Quaternion.identity;
 
+    void Start()
+    {
+        if (KATNativeSDK.GetWalkStatus().connected)
+        {
+            // Treadmill connected: apply -90 degree fix
+            transform.rotation = Quaternion.Euler(0, -90f, 0);
+        }
+        else
+        {
+            // No treadmill (debug mode): zero out rotation
+            transform.rotation = Quaternion.identity;
+        }
+    }
+
     void FixedUpdate()
     {
         var ws = KATNativeSDK.GetWalkStatus();
@@ -62,18 +77,27 @@ public class KATXRWalker : MonoBehaviour
             if (Input.GetKey(KeyCode.D)) ws.moveSpeed.x = 1;
             if (Input.GetKey(KeyCode.A)) ws.moveSpeed.x = -1;
 
+            float stickX = Input.GetAxis("Horizontal");
+            float stickY = Input.GetAxis("Vertical");
+            ws.moveSpeed.x += stickX;
+            ws.moveSpeed.z += stickY;
+
+            float rightStickX = Input.GetAxis("RightStickHorizontal");
+            simulatedYaw += rightStickX * yawTurnSpeed * Time.fixedDeltaTime;
+
             if (Input.GetKey(KeyCode.Q)) simulatedYaw -= yawTurnSpeed * Time.fixedDeltaTime;
             if (Input.GetKey(KeyCode.E)) simulatedYaw += yawTurnSpeed * Time.fixedDeltaTime;
 
             simulatedBodyRotation = Quaternion.Euler(0, simulatedYaw, 0);
             ws.bodyRotationRaw = simulatedBodyRotation;
 
+            if (cameraOffset != null)
+                cameraOffset.transform.rotation = simulatedBodyRotation;
+
+            if (eye != null)
+                eye.transform.rotation = simulatedBodyRotation;
         }
 
-        if (!treadmillConnected && ws.moveSpeed == Vector3.zero)
-        {
-            return;
-        }
 
         // Calibration
         var lastCalibrationTime = KATNativeSDK.GetLastCalibratedTimeEscaped();

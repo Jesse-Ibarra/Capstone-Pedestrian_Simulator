@@ -27,23 +27,40 @@ public class IKTargetFollowVRRig : MonoBehaviour
     public Vector3 headBodyPositionOffset;
     public float headBodyYawOffset;
 
-    public Transform treadmillForward; // <- assign this in Inspector
+    public Transform treadmillForward; // Assign in Inspector (the capsule transform)
 
-    // Update is called once per frame
     void LateUpdate()
     {
-        // Position the avatar body based on the head IK target + offset
+        if (head == null || treadmillForward == null)
+            return;
+
+        // --- 1. Position the avatar body based on the head IK target + offset
         transform.position = head.ikTarget.position + headBodyPositionOffset;
 
-        // Rotate based on treadmill's Y rotation, not headset
-        float yaw = treadmillForward.eulerAngles.y;
+        // --- 2. Rotate avatar depending on treadmill vs debug
+        float yaw;
+
+        if (KATNativeSDK.GetWalkStatus().connected)
+        {
+            // Treadmill is connected → use treadmillForward Y rotation
+            yaw = treadmillForward.eulerAngles.y;
+        }
+        else
+        {
+            // No treadmill → debug mode → use capsule (this transform's parent) rotation
+            if (transform.parent != null)
+                yaw = transform.parent.eulerAngles.y;
+            else
+                yaw = treadmillForward.eulerAngles.y; // fallback
+        }
+
         transform.rotation = Quaternion.Lerp(
             transform.rotation,
             Quaternion.Euler(transform.eulerAngles.x, yaw + headBodyYawOffset, transform.eulerAngles.z),
             turnSmoothness
         );
 
-        // Apply IK mappings
+        // --- 3. Map the IK targets
         head.Map();
         leftHand.Map();
         rightHand.Map();

@@ -21,6 +21,6 @@ public class Position : MonoBehaviour
             child.position = newPos;
         }
 
-        Debug.Log("✅ XRRig children aligned to KATDemoWalker at start.");
+        Debug.Log(" XRRig children aligned to KATDemoWalker at start.");
     }
 }

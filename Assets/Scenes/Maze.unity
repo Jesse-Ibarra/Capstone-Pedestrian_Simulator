@@ -1986,9 +1986,17 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2225148161644640727, guid: 4bc2d74b2ef40e3439487fcbf266cba2, type: 3}
+      propertyPath: debugMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2225148161644640727, guid: 4bc2d74b2ef40e3439487fcbf266cba2, type: 3}
       propertyPath: speedMode
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2225148161644640727, guid: 4bc2d74b2ef40e3439487fcbf266cba2, type: 3}
+      propertyPath: cameraOffset
+      value: 
+      objectReference: {fileID: 1706393981}
     - target: {fileID: 2225148161644640727, guid: 4bc2d74b2ef40e3439487fcbf266cba2, type: 3}
       propertyPath: constantSpeed
       value: 1
@@ -2088,7 +2096,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 366286941}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: LaserPointer (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2355,7 +2363,7 @@ GameObject:
   m_Component:
   - component: {fileID: 490955953}
   - component: {fileID: 490955954}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6538,7 +6546,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.0034, y: 1.1397, z: 0.226}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -7582,7 +7590,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1129909172}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: LaserPointer (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9407,9 +9415,21 @@ MonoBehaviour:
     ikTarget: {fileID: 134073465}
     trackingPositionOffset: {x: 0, y: 0, z: 0}
     trackingRotationOffset: {x: 0, y: 0, z: 0}
-  headBodyPositionOffset: {x: 0.1, y: -1.95, z: 0}
+  headBodyPositionOffset: {x: 0.03, y: -2.55, z: -0.1}
   headBodyYawOffset: 0
   treadmillForward: {fileID: 1892387770}
+--- !u!114 &1411411747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1411411739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be88fe42bbf58274ab59f986a5b84440, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1413556439 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3035880513782216458, guid: 4a0370fa736131c46bbad4559774c150, type: 3}
@@ -10479,7 +10499,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1574559331}
   - component: {fileID: 1574559332}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10853,7 +10873,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1706393981}
-  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -10863,7 +10883,7 @@ Transform:
   - {fileID: 811520338}
   m_Father: {fileID: 2104908587}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1706393983
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10877,8 +10897,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   katWalker: {fileID: 1892387770}
-  heightOffset: 0.85
-  forwardOffset: 0
+  heightOffset: 0.7
 --- !u!4 &1718002603 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -3710180072919465031, guid: 3f62ee9f0d4c3db42a549a2b4039a406, type: 3}
